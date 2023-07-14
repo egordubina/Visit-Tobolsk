@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Base.V31.Theme.VisitTobolsk" parent="Base.V24.Theme.VisitTobolsk">
+        <item name="android:windowSplashScreenBackground">@color/material_dynamic_primary90</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/neuromantics_brand_black</item>
+    </style>
+</resources>

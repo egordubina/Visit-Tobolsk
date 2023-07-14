@@ -1,0 +1,51 @@
+package ru.neuromantics.visittobolsk.domain.models
+
+import ru.neuromantics.visittobolsk.data.models.Address
+import ru.neuromantics.visittobolsk.data.models.Image
+import ru.neuromantics.visittobolsk.data.models.Phone
+import ru.neuromantics.visittobolsk.domain.DateTimeUtil
+import ru.neuromantics.visittobolsk.ui.models.MuseumUi
+
+data class MuseumDomain(
+    val id: Int,
+    val title: String,
+    val images: List<Image>,
+    val address: Address,
+    val phone: List<Phone>,
+    val site: String,
+    val price: Int,
+    val schedule: List<String>,
+) {
+    private val currentDay = DateTimeUtil.currentDayOfWeek
+    private val openTime = this.schedule[currentDay - 1]
+        .split("-").first()
+        .split(":").first()
+        .toInt()
+    private val closeTime = this.schedule[currentDay - 1]
+        .split("-").last()
+        .split(":").first()
+        .toInt()
+    val isOpen = DateTimeUtil.currentHour in openTime until closeTime
+    val time =
+        if (isOpen)
+            this.schedule[currentDay - 1].split("-").last()
+        else
+            this.schedule[currentDay - 1].split("-").first()
+}
+
+fun List<MuseumDomain>.toUi(): List<MuseumUi> {
+    return map {
+        MuseumUi(
+            id = it.id,
+            title = it.title,
+            images = it.images,
+            address = it.address,
+            phone = it.phone,
+            site = it.site,
+            price = it.price,
+            schedule = it.schedule,
+            isOpen = it.isOpen,
+            time = it.time
+        )
+    }
+}
