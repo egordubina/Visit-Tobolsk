@@ -14,6 +14,6 @@ sealed class MostInterestingUiState {
         val museumsList: List<MuseumUi>,
         val parksList: List<ParkDomain>,
         val hotelsList: List<HotelDomain>,
-        val searchResults: List<SearchUi>,
+//        val searchResults: List<SearchUi>,
     ) : MostInterestingUiState()
 }

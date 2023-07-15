@@ -2,6 +2,7 @@ package ru.travel.visittobolsk.ui.screens
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -54,7 +55,7 @@ import ru.travel.visittobolsk.ui.models.MuseumUi
 import ru.travel.visittobolsk.ui.uistates.MostInterestingUiState
 import ru.travel.visittobolsk.ui.viewmodels.MostInterestsViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun MostInteresting(
     onSettingsButtonClick: () -> Unit,
@@ -65,7 +66,8 @@ fun MostInteresting(
     onHotelCardClick: (HotelDomain) -> Unit,
     vm: MostInterestsViewModel = koinViewModel()
 ) {
-    val uiState = vm.uiState.collectAsState()
+//    val uiState = vm.uiState.collectAsState()
+    val uiState = vm.newUiState.collectAsState()
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var searchIsActive by rememberSaveable { mutableStateOf(false) }
     val searchBarPadding by animateDpAsState(if (searchIsActive) 0.dp else 16.dp, label = "")
