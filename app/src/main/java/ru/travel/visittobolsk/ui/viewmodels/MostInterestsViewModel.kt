@@ -7,18 +7,20 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.travel.visittobolsk.domain.models.toUi
 import ru.travel.visittobolsk.domain.usecases.LoadInterestsScreenUseCaseImpl
 import ru.travel.visittobolsk.domain.usecases.SearchUseCaseImpl
+import ru.travel.visittobolsk.ui.models.SearchUi
 import ru.travel.visittobolsk.ui.uistates.MostInterestingUiState
 
 class MostInterestsViewModel(
     private val loadScreenUseCase: LoadInterestsScreenUseCaseImpl,
-    private val searchUseCase: SearchUseCaseImpl
+    private val searchUseCase: SearchUseCaseImpl,
 ) : ViewModel() {
-    private var _uiState: MutableStateFlow<MostInterestingUiState> =
-        MutableStateFlow(MostInterestingUiState.Loading)
+    private var _uiState: MutableStateFlow<MostInterestingUiState> = MutableStateFlow(MostInterestingUiState.Loading)
     val uiState: StateFlow<MostInterestingUiState> = _uiState.asStateFlow()
     private var _searchResult: MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
     val searchResult: StateFlow<List<String>> = _searchResult.asStateFlow()
@@ -62,6 +64,7 @@ class MostInterestsViewModel(
                     museumsList = museums.await().toUi(),
                     parksList = parks.await(),
                     hotelsList = hotels.await(),
+                    searchResults = emptyList()
                 )
             } catch (e: Exception) {
                 _uiState.value = MostInterestingUiState.Error

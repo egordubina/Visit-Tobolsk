@@ -1,5 +1,7 @@
 package ru.travel.visittobolsk.data.network
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import ru.travel.visittobolsk.data.TempData
 import ru.travel.visittobolsk.data.models.ArModel
 import ru.travel.visittobolsk.data.models.CafeNetwork
@@ -8,6 +10,8 @@ import ru.travel.visittobolsk.data.models.MuseumNetwork
 import ru.travel.visittobolsk.data.models.ParkNetwork
 
 interface SharedApi {
+    val cafes: Flow<CafeNetwork>
+    val hotels: Flow<HotelNetwork>
     suspend fun loadAllCafes(): List<CafeNetwork>
     suspend fun loadCafeById(id: Int): CafeNetwork
 
@@ -26,7 +30,7 @@ interface SharedApi {
 //const val BASE_URL = "http://192.168.0.7:8000"
 
 class SharedApiImpl : SharedApi {
-//    private val json by lazy { Json { ignoreUnknownKeys = true } }
+    //    private val json by lazy { Json { ignoreUnknownKeys = true } }
 //    private val client by lazy { HttpClient(CIO)
 //        HttpClient {
 //            install(ContentNegotiation) {
@@ -39,7 +43,13 @@ class SharedApiImpl : SharedApi {
 //            }
 //        }
 //    }
+    override val cafes: Flow<CafeNetwork> = flow {
+        TempData.cafes.forEach { emit(it) }
+    }
 
+    override val hotels: Flow<HotelNetwork> = flow {
+        TempData.hotels.forEach { emit(it) }
+    }
     override suspend fun loadAllCafes(): List<CafeNetwork> {
         return try {
 //            val response = client.get("$BASE_URL/cafes/cafe_list_short/").bodyAsText()

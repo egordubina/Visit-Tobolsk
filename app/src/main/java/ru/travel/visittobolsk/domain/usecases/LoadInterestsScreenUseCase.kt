@@ -1,5 +1,8 @@
 package ru.travel.visittobolsk.domain.usecases
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import ru.travel.visittobolsk.data.models.toDomain
 import ru.travel.visittobolsk.data.repository.CafesRepository
 import ru.travel.visittobolsk.data.repository.HotelsRepository
@@ -23,6 +26,8 @@ class LoadInterestsScreenUseCaseImpl(
     private val museumsRepository: MuseumsRepository,
     private val hotelsRepository: HotelsRepository,
 ) : LoadInterestsScreenUseCase {
+    val allCafes: Flow<CafeDomain> = cafesRepository.cafes.map { it.toDomain() }
+    val allHotels: Flow<HotelDomain> = cafesRepository.hotels.map { it.toDomain() }
 
     override suspend fun loadAllCafes(): List<CafeDomain> = cafesRepository.loadAllCafes().toDomain()
 
