@@ -27,7 +27,7 @@ class MostInterestsViewModel(
     private val cafesFlow = MutableStateFlow<List<CafeUi>>(emptyList())
     private val hotelsFlow = MutableStateFlow<List<HotelDomain>>(emptyList())
     private val parksFlow = MutableStateFlow<List<ParkDomain>>(emptyList())
-    private var _uiState: MutableStateFlow<MostInterestingUiState> = MutableStateFlow(MostInterestingUiState.Loading)
+    private var _uiState: MutableStateFlow<MostInterestingUiState> = MutableStateFlow(MostInterestingUiState())
     val uiState: StateFlow<MostInterestingUiState> = _uiState.asStateFlow()
     private var _searchResult: MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
     val searchResult: StateFlow<List<String>> = _searchResult.asStateFlow()
@@ -38,7 +38,7 @@ class MostInterestsViewModel(
         hotelsFlow,
         parksFlow
     ) { cafes, hotels, parks ->
-        MostInterestingUiState.Content(
+        MostInterestingUiState(
             isLoading = cafes.isEmpty() || hotels.isEmpty() || parks.isEmpty(),
             cafesList = cafes,
             hotelsList = hotels,
@@ -48,7 +48,7 @@ class MostInterestsViewModel(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
-        initialValue = MostInterestingUiState.Loading
+        initialValue = MostInterestingUiState()
     )
 
     fun search(query: String) {

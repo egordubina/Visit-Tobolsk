@@ -3,7 +3,13 @@ package ru.travel.visittobolsk.ui.screens
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,6 +44,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -86,6 +93,15 @@ fun MostInteresting(
     var isOpenFilterPanel by rememberSaveable { mutableStateOf(false) }
     val bottomSheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
+    val transition = rememberInfiniteTransition(label = "")
+    val backgroundColorAnimation by transition.animateColor(
+        initialValue = MaterialTheme.colorScheme.tertiaryContainer,
+        targetValue = SearchBarDefaults.colors().containerColor,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ), label = ""
+    )
     Scaffold(
         topBar = {
             SearchBar(
@@ -137,11 +153,17 @@ fun MostInteresting(
                 },
                 placeholder = {
                     Text(
-                        text = if (searchIsActive) "Поиск" else "Узнай Тобольск",
+                        text = when {
+                            uiState.isLoading -> "Погружение в Тобольск"
+                            uiState.isError -> "Ошибка"
+                            searchIsActive -> "Поиск"
+                            else -> "Узнай Тобольск"
+                        },
                         textAlign = if (searchIsActive) TextAlign.Start else TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
                 },
+                colors = SearchBarDefaults.colors(containerColor = if (uiState.isLoading) backgroundColorAnimation else SearchBarDefaults.colors().containerColor),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(searchBarPadding)
@@ -262,146 +284,110 @@ fun MostInteresting(
         },
         floatingActionButtonPosition = FabPosition.End
     ) { padding ->
-        when (uiState) {
-            is MostInterestingUiState.Content -> ContentScreen(
-                isLoading = uiState.isLoading,
-                cafesList = uiState.cafesList,
-                museumsList = uiState.museumsList,
-                parksList = uiState.parksList,
-                hotelsList = uiState.hotelsList,
-                onCafeCardClick = onCafeCardClick,
-                onMuseumCardClick = onMuseumCardClick,
-                onParkCardClick = onParkCardClick,
-                onHotelCardClick = onHotelCardClick,
-                temperature = 14,
-                modifier = Modifier
-                    .padding(padding)
-                    .padding(horizontal = 16.dp)
-            )
-
-            MostInterestingUiState.Error -> {}
-            MostInterestingUiState.Loading -> {}
-        }
-//        AnimatedContent(uiState.value, label = "") { uiState ->
-//            when (uiState) {
-//                is MostInterestingUiState.Content -> {
-//                    ContentScreen(
-//                        cafesList = uiState.cafesList,
-//                        museumsList = uiState.museumsList,
-//                        parksList = uiState.parksList,
-//                        hotelsList = uiState.hotelsList,
-//                        onCafeCardClick = onCafeCardClick,
-//                        onMuseumCardClick = onMuseumCardClick,
-//                        onParkCardClick = onParkCardClick,
-//                        onHotelCardClick = onHotelCardClick,
-//                        temperature = 14,
-//                        modifier = Modifier
-//                            .padding(padding)
-//                            .padding(horizontal = 16.dp)
-//                    )
-//                }
-//
-//                MostInterestingUiState.Error -> {
-//                    ErrorScreen(
-//                        modifier = Modifier
-//                            .fillMaxSize()
-//                            .padding(padding)
-//                    )
-//                }
-//
-//                MostInterestingUiState.Loading -> {
-//                    LoadingScreen(modifier = Modifier.padding(padding))
-//                }
-//            }
-//        }
-        if (isOpenFilterPanel)
-            ModalBottomSheet(onDismissRequest = {
-                scope.launch {
-                    bottomSheetState.hide()
-                    isOpenFilterPanel = false
+        ContentScreen(
+            isLoading = uiState.isLoading,
+            cafesList = uiState.cafesList,
+            museumsList = uiState.museumsList,
+            parksList = uiState.parksList,
+            hotelsList = uiState.hotelsList,
+            onCafeCardClick = onCafeCardClick,
+            onMuseumCardClick = onMuseumCardClick,
+            onParkCardClick = onParkCardClick,
+            onHotelCardClick = onHotelCardClick,
+            temperature = 14,
+            modifier = Modifier
+                .padding(padding)
+                .padding(horizontal = 16.dp)
+        )
+    }
+    if (isOpenFilterPanel)
+        ModalBottomSheet(onDismissRequest = {
+            scope.launch {
+                bottomSheetState.hide()
+                isOpenFilterPanel = false
+            }
+        }) {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                item {
+                    Text(
+                        text = "Фильтр",
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
                 }
-            }) {
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    item {
+                item {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
                         Text(
-                            text = "Фильтр",
-                            style = MaterialTheme.typography.headlineMedium,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
+                            text = "Тип",
+                            style = MaterialTheme.typography.headlineSmall,
+                            modifier = Modifier.padding(horizontal = 16.dp)
                         )
-                    }
-                    item {
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        LazyRow(
+                            contentPadding = PaddingValues(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            Text(
-                                text = "Тип",
-                                style = MaterialTheme.typography.headlineSmall,
-                                modifier = Modifier.padding(horizontal = 16.dp)
-                            )
-                            LazyRow(
-                                contentPadding = PaddingValues(horizontal = 16.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                item {
-                                    FilterChip(
-                                        selected = false,
-                                        onClick = { /*TODO*/ },
-                                        label = {
-                                            Text(
-                                                text = "Еда",
-                                                style = MaterialTheme.typography.labelLarge
-                                            )
-                                        }
-                                    )
-                                }
-                                item {
-                                    FilterChip(
-                                        selected = false,
-                                        onClick = { /*TODO*/ },
-                                        label = {
-                                            Text(
-                                                text = "Парки",
-                                                style = MaterialTheme.typography.labelLarge
-                                            )
-                                        }
-                                    )
-                                }
-                                item {
-                                    FilterChip(
-                                        selected = false,
-                                        onClick = { /*TODO*/ },
-                                        label = {
-                                            Text(
-                                                text = "Музеи",
-                                                style = MaterialTheme.typography.labelLarge
-                                            )
-                                        }
-                                    )
-                                }
-                                item {
-                                    FilterChip(
-                                        selected = false,
-                                        onClick = { /*TODO*/ },
-                                        label = {
-                                            Text(
-                                                text = "Отели",
-                                                style = MaterialTheme.typography.labelLarge
-                                            )
-                                        }
-                                    )
-                                }
+                            item {
+                                FilterChip(
+                                    selected = false,
+                                    onClick = { /*TODO*/ },
+                                    label = {
+                                        Text(
+                                            text = "Еда",
+                                            style = MaterialTheme.typography.labelLarge
+                                        )
+                                    }
+                                )
                             }
-                            Spacer(modifier = Modifier.height(16.dp))
+                            item {
+                                FilterChip(
+                                    selected = false,
+                                    onClick = { /*TODO*/ },
+                                    label = {
+                                        Text(
+                                            text = "Парки",
+                                            style = MaterialTheme.typography.labelLarge
+                                        )
+                                    }
+                                )
+                            }
+                            item {
+                                FilterChip(
+                                    selected = false,
+                                    onClick = { /*TODO*/ },
+                                    label = {
+                                        Text(
+                                            text = "Музеи",
+                                            style = MaterialTheme.typography.labelLarge
+                                        )
+                                    }
+                                )
+                            }
+                            item {
+                                FilterChip(
+                                    selected = false,
+                                    onClick = { /*TODO*/ },
+                                    label = {
+                                        Text(
+                                            text = "Отели",
+                                            style = MaterialTheme.typography.labelLarge
+                                        )
+                                    }
+                                )
+                            }
                         }
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
                 }
             }
-    }
+        }
 }
+
 
 @Composable
 private fun ContentScreen(
@@ -419,10 +405,6 @@ private fun ContentScreen(
 ) {
     val time = DateTimeUtil.currentHour
     LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp), modifier = modifier) {
-        if (isLoading)
-            item {
-                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-            }
         item {
             Column {
                 Text(
@@ -516,26 +498,5 @@ private fun ContentScreen(
 //                time = ""
 //            ) { onMuseumCardClick(museum) }
 //        }
-    }
-}
-
-@Composable
-private fun LoadingScreen(modifier: Modifier) {
-    Column(
-        modifier = modifier
-    ) {
-        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-    }
-}
-
-@Composable
-private fun ErrorScreen(modifier: Modifier) {
-    Column(modifier = modifier) {
-        Text(
-            text = "Error",
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.fillMaxWidth()
-        )
     }
 }
