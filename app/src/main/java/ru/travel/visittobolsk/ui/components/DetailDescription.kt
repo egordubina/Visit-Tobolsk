@@ -25,7 +25,11 @@ import androidx.compose.ui.text.style.TextOverflow
 fun Description(text: String, modifier: Modifier = Modifier) {
     var isOpen by rememberSaveable { mutableStateOf(false) }
     Column(modifier = modifier.animateContentSize()) {
-        DescriptionHeader(isOpen = isOpen, setIsOpen = { isOpen = it })
+        DescriptionHeader(
+            isOpen = isOpen,
+            setIsOpen = { isOpen = it },
+            hasDescription = text.isNotEmpty()
+        )
         Text(
             text = text.ifEmpty { "Описание отсутствует" },
             maxLines = if (isOpen) Int.MAX_VALUE else 3,
@@ -35,7 +39,11 @@ fun Description(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun DescriptionHeader(isOpen: Boolean, setIsOpen: (Boolean) -> Unit) {
+private fun DescriptionHeader(
+    isOpen: Boolean,
+    setIsOpen: (Boolean) -> Unit,
+    hasDescription: Boolean
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -45,11 +53,12 @@ private fun DescriptionHeader(isOpen: Boolean, setIsOpen: (Boolean) -> Unit) {
             text = "Описание",
             style = MaterialTheme.typography.headlineSmall,
         )
-        IconButton(onClick = { setIsOpen(!isOpen) }) {
-            Icon(
-                imageVector = if (isOpen) Icons.Rounded.ExpandLess else Icons.Rounded.ExpandMore,
-                contentDescription = null
-            )
-        }
+        if (hasDescription)
+            IconButton(onClick = { setIsOpen(!isOpen) }) {
+                Icon(
+                    imageVector = if (isOpen) Icons.Rounded.ExpandLess else Icons.Rounded.ExpandMore,
+                    contentDescription = null
+                )
+            }
     }
 }

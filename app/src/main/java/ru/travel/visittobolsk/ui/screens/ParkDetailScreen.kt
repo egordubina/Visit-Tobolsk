@@ -1,6 +1,7 @@
 package ru.travel.visittobolsk.ui.screens
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,11 +31,12 @@ import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
 import ru.travel.visittobolsk.ui.components.Description
 import ru.travel.visittobolsk.ui.components.DetailAddresses
+import ru.travel.visittobolsk.ui.components.ImagesGrid
 import ru.travel.visittobolsk.ui.components.ImagesSlider
 import ru.travel.visittobolsk.ui.uistates.ParkDetailScreenUiState
 import ru.travel.visittobolsk.ui.viewmodels.ParkDetailScreenViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun ParkDetailScreen(
     vm: ParkDetailScreenViewModel = koinViewModel(),
@@ -42,7 +44,6 @@ fun ParkDetailScreen(
     onBackButtonClick: () -> Unit,
 ) {
     val uiState = vm.uiState.collectAsState()
-    val context = LocalContext.current
     var toolbarTitle by rememberSaveable { mutableStateOf("") }
     Scaffold(
         topBar = {
@@ -98,6 +99,7 @@ fun ParkDetailScreen(
                             addresses = listOf(state.address),
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
+//                        ImagesGrid(images = state.images)
                         Spacer(modifier = Modifier.height(32.dp))
                     }
                 }

@@ -8,16 +8,14 @@ import ru.travel.visittobolsk.data.network.SharedApi
 import ru.travel.visittobolsk.domain.models.ParkDomain
 
 interface ParksRepository {
-    val parks: Flow<List<ParkNetwork>>
-    suspend fun loadParkById(id: Int): ParkNetwork
     suspend fun loadAllParks(): List<ParkNetwork>
+    suspend fun loadParkById(id: Int): ParkNetwork
 }
 
 class ParksRepositoryImpl(
     private val api: SharedApi,
 ) : ParksRepository {
-    override val parks: Flow<List<ParkNetwork>> = api.parks
-    override suspend fun loadParkById(id: Int): ParkNetwork = api.loadParkById(id = id)
-
     override suspend fun loadAllParks(): List<ParkNetwork> = api.loadAllParks()
+
+    override suspend fun loadParkById(id: Int): ParkNetwork = api.loadParkById(id = id)
 }

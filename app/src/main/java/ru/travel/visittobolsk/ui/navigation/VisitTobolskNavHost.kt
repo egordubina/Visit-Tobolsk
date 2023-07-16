@@ -3,6 +3,7 @@ package ru.travel.visittobolsk.ui.navigation
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -11,6 +12,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import org.koin.androidx.compose.koinViewModel
 import ru.travel.visittobolsk.R
 import ru.travel.visittobolsk.ui.screens.CafeDetailScreen
 import ru.travel.visittobolsk.ui.screens.ContactsScreen
@@ -19,6 +21,7 @@ import ru.travel.visittobolsk.ui.screens.MostInteresting
 import ru.travel.visittobolsk.ui.screens.MuseumDetailScreen
 import ru.travel.visittobolsk.ui.screens.ParkDetailScreen
 import ru.travel.visittobolsk.ui.screens.SettingsScreen
+import ru.travel.visittobolsk.ui.viewmodels.MostInterestsViewModel
 
 enum class VisitTobolskDestination {
     MOST_INTERESTING,
@@ -41,13 +44,17 @@ fun VisitTobolskNavHost(navController: NavHostController, modifier: Modifier) {
         startDestination = VisitTobolskDestination.MOST_INTERESTING.name,
     ) {
         composable(route = VisitTobolskDestination.MOST_INTERESTING.name) {
+            val vm: MostInterestsViewModel = koinViewModel()
+            val uiState = vm.newUiState.collectAsState()
             MostInteresting(
+                uiState = uiState.value,
                 onSettingsButtonClick = { navController.navigate(VisitTobolskDestination.SETTINGS.name) },
                 onArButtonClick = { navController.navigate(VisitTobolskDestination.WELCOME_AR.name) },
                 onCafeCardClick = { cafe -> navController.navigate("${VisitTobolskDestination.CAFE_DETAIL.name}/${cafe.id}") },
                 onMuseumCardClick = { museum -> navController.navigate("${VisitTobolskDestination.MUSEUM_DETAIL.name}/${museum.id}") },
                 onParkCardClick = { park -> navController.navigate("${VisitTobolskDestination.PARK_DETAIL.name}/${park.id}") },
-                onHotelCardClick = { hotel -> navController.navigate("${VisitTobolskDestination.HOTEL_DETAIL.name}/${hotel.id}") }
+                onHotelCardClick = { hotel -> navController.navigate("${VisitTobolskDestination.HOTEL_DETAIL.name}/${hotel.id}") },
+                vm = vm,
             )
         }
         composable(route = VisitTobolskDestination.WELCOME_AR.name) {

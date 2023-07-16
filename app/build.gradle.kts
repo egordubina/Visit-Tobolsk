@@ -73,6 +73,8 @@ dependencies {
     implementation(libs.coil)
     implementation(libs.androidx.core.splashscreen)
     implementation("ru.rustore.sdk:appupdate:0.1.2")
+    implementation("io.ktor:ktor-client-core:2.3.2")
+    implementation("io.ktor:ktor-client-cio:2.3.2")
 
     // Testing
     testImplementation(libs.junit)

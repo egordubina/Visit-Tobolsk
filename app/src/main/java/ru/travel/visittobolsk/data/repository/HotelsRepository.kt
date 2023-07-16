@@ -8,7 +8,6 @@ import ru.travel.visittobolsk.data.network.SharedApi
 import ru.travel.visittobolsk.domain.models.HotelDomain
 
 interface HotelsRepository {
-    val hotels: Flow<List<HotelNetwork>>
     suspend fun loadHotelById(id: Int): HotelNetwork
     suspend fun loadAllHotels(): List<HotelNetwork>
 }
@@ -16,8 +15,6 @@ interface HotelsRepository {
 class HotelsRepositoryImpl(
     private val api: SharedApi,
 ) : HotelsRepository {
-    override val hotels: Flow<List<HotelNetwork>> = api.hotels
     override suspend fun loadHotelById(id: Int): HotelNetwork = api.loadHotelById(id = id)
-
     override suspend fun loadAllHotels(): List<HotelNetwork> = api.loadAllHotels()
 }

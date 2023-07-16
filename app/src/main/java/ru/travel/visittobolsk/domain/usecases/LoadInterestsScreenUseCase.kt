@@ -12,10 +12,12 @@ import ru.travel.visittobolsk.domain.models.HotelDomain
 import ru.travel.visittobolsk.domain.models.ParkDomain
 
 interface LoadInterestsScreenUseCase {
-//    suspend fun loadAllCafes(): Flow<CafeDomain>
-//    suspend fun loadAllParks(): List<ParkDomain>
-//    suspend fun loadAllMuseums(): List<MuseumDomain>
-//    suspend fun loadAllHotels(): List<HotelDomain>
+//    val allCafes: Flow<List<CafeDomain>>
+//    val allHotels: Flow<List<HotelDomain>>
+//    val allParks: Flow<List<ParkDomain>>
+    suspend fun loadAllCafes(): List<CafeDomain>
+    suspend fun loadAllHotels(): List<HotelDomain>
+    suspend fun loadAllParks(): List<ParkDomain>
 }
 
 class LoadInterestsScreenUseCaseImpl(
@@ -24,15 +26,11 @@ class LoadInterestsScreenUseCaseImpl(
     private val museumsRepository: MuseumsRepository,
     private val hotelsRepository: HotelsRepository,
 ) : LoadInterestsScreenUseCase {
-    val allCafes: Flow<List<CafeDomain>> = cafesRepository.cafes.map { it.toDomain() }
-    val allHotels: Flow<List<HotelDomain>> = hotelsRepository.hotels.map { it.toDomain() }
-    val allParks: Flow<List<ParkDomain>> = parksRepository.parks.map { it.toDomain() }
 
-//    override suspend fun loadAllCafes(): Flow<CafeDomain> = cafesRepository.loadAllCafes().map { it.toDomain() }
-//
-//    override suspend fun loadAllParks(): List<ParkDomain> = parksRepository.loadAllParks().toDomain()
-//
-//    override suspend fun loadAllMuseums(): List<MuseumDomain> = museumsRepository.loadAllMuseums().toDomain()
-//
-//    override suspend fun loadAllHotels(): List<HotelDomain> = hotelsRepository.loadAllHotels().toDomain()
+    //    override val allCafes: Flow<List<CafeDomain>> = cafesRepository.cafes.map { it.toDomain() }
+//    override val allHotels: Flow<List<HotelDomain>> = hotelsRepository.hotels.map { it.toDomain() }
+//    override val allParks: Flow<List<ParkDomain>> = parksRepository.parks.map { it.toDomain() }
+    override suspend fun loadAllCafes(): List<CafeDomain> = cafesRepository.loadAllCafes().toDomain()
+    override suspend fun loadAllHotels(): List<HotelDomain> = hotelsRepository.loadAllHotels().toDomain()
+    override suspend fun loadAllParks(): List<ParkDomain> = parksRepository.loadAllParks().toDomain()
 }

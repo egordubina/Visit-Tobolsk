@@ -10,6 +10,7 @@ sealed class MostInterestingUiState {
     object Error : MostInterestingUiState()
     object Loading : MostInterestingUiState()
     data class Content(
+        val isLoading: Boolean,
         val cafesList: List<CafeUi>,
         val museumsList: List<MuseumUi>,
         val parksList: List<ParkDomain>,
