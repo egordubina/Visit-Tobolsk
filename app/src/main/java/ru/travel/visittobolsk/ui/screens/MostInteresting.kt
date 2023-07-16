@@ -86,7 +86,6 @@ fun MostInteresting(
     onHotelCardClick: (HotelDomain) -> Unit,
     vm: MostInterestsViewModel
 ) {
-//    val uiState = vm.newUiState.collectAsState()
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var searchIsActive by rememberSaveable { mutableStateOf(false) }
     val searchBarPadding by animateDpAsState(if (searchIsActive) 0.dp else 16.dp, label = "")
@@ -113,7 +112,7 @@ fun MostInteresting(
                     if (!it)
                         searchQuery = ""
                 },
-                onSearch = { vm.search(it) },
+                onSearch = { /*vm.search(it)*/ },
                 leadingIcon = {
 //                    if (!searchIsActive)
 //                        IconButton(onClick = onArButtonClick) {
@@ -276,13 +275,13 @@ fun MostInteresting(
                 }
             }
         },
-        floatingActionButton = {
-            ExtendedFloatingActionButton(onClick = { isOpenFilterPanel = true }) {
-                Icon(imageVector = Icons.Rounded.FilterList, contentDescription = null)
-                Text(text = "Help", modifier = Modifier.padding(start = 4.dp))
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End
+//        floatingActionButton = {
+//            ExtendedFloatingActionButton(onClick = { isOpenFilterPanel = true }) {
+//                Icon(imageVector = Icons.Rounded.FilterList, contentDescription = null)
+//                Text(text = "Фильтр", modifier = Modifier.padding(start = 4.dp))
+//            }
+//        },
+//        floatingActionButtonPosition = FabPosition.End
     ) { padding ->
         ContentScreen(
             isLoading = uiState.isLoading,
@@ -300,92 +299,6 @@ fun MostInteresting(
                 .padding(horizontal = 16.dp)
         )
     }
-    if (isOpenFilterPanel)
-        ModalBottomSheet(onDismissRequest = {
-            scope.launch {
-                bottomSheetState.hide()
-                isOpenFilterPanel = false
-            }
-        }) {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                item {
-                    Text(
-                        text = "Фильтр",
-                        style = MaterialTheme.typography.headlineMedium,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                    )
-                }
-                item {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Text(
-                            text = "Тип",
-                            style = MaterialTheme.typography.headlineSmall,
-                            modifier = Modifier.padding(horizontal = 16.dp)
-                        )
-                        LazyRow(
-                            contentPadding = PaddingValues(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            item {
-                                FilterChip(
-                                    selected = false,
-                                    onClick = { /*TODO*/ },
-                                    label = {
-                                        Text(
-                                            text = "Еда",
-                                            style = MaterialTheme.typography.labelLarge
-                                        )
-                                    }
-                                )
-                            }
-                            item {
-                                FilterChip(
-                                    selected = false,
-                                    onClick = { /*TODO*/ },
-                                    label = {
-                                        Text(
-                                            text = "Парки",
-                                            style = MaterialTheme.typography.labelLarge
-                                        )
-                                    }
-                                )
-                            }
-                            item {
-                                FilterChip(
-                                    selected = false,
-                                    onClick = { /*TODO*/ },
-                                    label = {
-                                        Text(
-                                            text = "Музеи",
-                                            style = MaterialTheme.typography.labelLarge
-                                        )
-                                    }
-                                )
-                            }
-                            item {
-                                FilterChip(
-                                    selected = false,
-                                    onClick = { /*TODO*/ },
-                                    label = {
-                                        Text(
-                                            text = "Отели",
-                                            style = MaterialTheme.typography.labelLarge
-                                        )
-                                    }
-                                )
-                            }
-                        }
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
-                }
-            }
-        }
 }
 
 
@@ -416,10 +329,10 @@ private fun ContentScreen(
                     },
                     style = MaterialTheme.typography.headlineSmall,
                 )
-                Text(
-                    text = "В Тобольске $temperature°",
-                    style = MaterialTheme.typography.headlineSmall,
-                )
+//                Text(
+//                    text = "В Тобольске $temperature°",
+//                    style = MaterialTheme.typography.headlineSmall,
+//                )
             }
         }
         item {
@@ -498,5 +411,8 @@ private fun ContentScreen(
 //                time = ""
 //            ) { onMuseumCardClick(museum) }
 //        }
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+        }
     }
 }

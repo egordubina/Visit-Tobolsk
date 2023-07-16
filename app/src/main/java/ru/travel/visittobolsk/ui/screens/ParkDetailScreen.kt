@@ -99,7 +99,6 @@ fun ParkDetailScreen(
                             addresses = listOf(state.address),
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
-//                        ImagesGrid(images = state.images)
                         Spacer(modifier = Modifier.height(32.dp))
                     }
                 }

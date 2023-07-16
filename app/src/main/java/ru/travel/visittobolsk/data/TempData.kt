@@ -383,6 +383,11 @@ class TempData {
                         id = 0,
                         image = "https://i8.photo.2gis.com/images/geo/0/30258560060524207_3f20_656x340.jpg",
                         name = ""
+                    ),
+                    Image(
+                        id = 1,
+                        image = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Памятник_покорителю_Сибири_Ермаку.jpg/2560px-Памятник_покорителю_Сибири_Ермаку.jpg",
+                        name = ""
                     )
                 ),
                 phones = listOf(
