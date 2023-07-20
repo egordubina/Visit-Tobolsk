@@ -3,10 +3,13 @@ package ru.travel.visittobolsk.ui.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.filament.Engine
+import io.github.sceneview.ar.node.ArNode
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.travel.visittobolsk.data.models.ArModel
 import ru.travel.visittobolsk.domain.usecases.LoadArUseCase
@@ -17,12 +20,7 @@ class ArViewModel(private val loadArUseCase: LoadArUseCase) : ViewModel() {
     private val _isError = MutableStateFlow(false)
     private val _models = MutableStateFlow(emptyList<ArModel>())
     val uiState = combine(_isLoading, _isError, _models) { loading, error, models ->
-        if (loading)
-            ArUiState.Loading
-        else if (error)
-            ArUiState.Error
-        else
-            ArUiState.Content(arModels = models)
+        ArUiState.Content(arModels = models)
     }.stateIn(
         initialValue = ArUiState.Loading,
         started = SharingStarted.WhileSubscribed(5_000),
@@ -39,7 +37,6 @@ class ArViewModel(private val loadArUseCase: LoadArUseCase) : ViewModel() {
                 _isError.value = true
             }
             _isLoading.value = false
-            Log.e("State", uiState.value.toString())
         }
     }
 }

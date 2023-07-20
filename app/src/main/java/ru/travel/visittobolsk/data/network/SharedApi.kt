@@ -9,6 +9,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
+import ru.travel.visittobolsk.R
 import ru.travel.visittobolsk.data.TempData
 import ru.travel.visittobolsk.data.models.ArModel
 import ru.travel.visittobolsk.data.models.CafeNetwork
@@ -106,7 +107,11 @@ class SharedApiImpl : SharedApi {
 
     override suspend fun loadArModels(): List<ArModel> {
         return try {
-            emptyList()
+            listOf(
+                ArModel(id = 0, "Купец", "models/kupes.glb", R.drawable.kupesrender),
+                ArModel(id = 1, "Лавка", "models/lavka.glb", R.drawable.lavkarender),
+                ArModel(id = 2, "Ладья", "models/ladia.glb", R.drawable.ladiarender),
+            )
         } catch (e: Exception) {
             throw RuntimeException(e.toString())
         }

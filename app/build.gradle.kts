@@ -76,6 +76,16 @@ dependencies {
     implementation("io.ktor:ktor-client-core:2.3.2")
     implementation("io.ktor:ktor-client-cio:2.3.2")
 
+    implementation("com.google.accompanist:accompanist-permissions:0.31.5-beta")
+    implementation("io.github.sceneview:arsceneview:0.10.0")
+
+    // Firebase
+//    implementation(platform("com.google.firebase:firebase-bom:32.2.0"))
+//    implementation("com.google.firebase:firebase-storage-ktx")
+//    implementation("com.google.firebase:firebase-analytics-ktx")
+//    implementation("com.google.firebase:firebase-crashlytics-ktx")
+//    implementation("com.google.firebase:firebase-perf-ktx")
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

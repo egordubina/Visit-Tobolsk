@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import org.koin.androidx.compose.koinViewModel
 import ru.travel.visittobolsk.R
+import ru.travel.visittobolsk.ui.screens.ArScreen
 import ru.travel.visittobolsk.ui.screens.CafeDetailScreen
 import ru.travel.visittobolsk.ui.screens.ContactsScreen
 import ru.travel.visittobolsk.ui.screens.HotelDetailScreen
@@ -21,6 +22,8 @@ import ru.travel.visittobolsk.ui.screens.MostInteresting
 import ru.travel.visittobolsk.ui.screens.MuseumDetailScreen
 import ru.travel.visittobolsk.ui.screens.ParkDetailScreen
 import ru.travel.visittobolsk.ui.screens.SettingsScreen
+import ru.travel.visittobolsk.ui.screens.WelcomeAr
+import ru.travel.visittobolsk.ui.viewmodels.ArViewModel
 import ru.travel.visittobolsk.ui.viewmodels.MostInterestsViewModel
 
 enum class VisitTobolskDestination {
@@ -58,9 +61,19 @@ fun VisitTobolskNavHost(navController: NavHostController, modifier: Modifier) {
             )
         }
         composable(route = VisitTobolskDestination.WELCOME_AR.name) {
-//            WelcomeAr(
-//                onBackButtonClick = { navController.navigateUp() }
-//            )
+            WelcomeAr(
+                onBackButtonClick = { navController.navigateUp() },
+                onToArButtonClick = { navController.navigate(VisitTobolskDestination.AR.name) }
+            )
+        }
+        composable(route = VisitTobolskDestination.AR.name) {
+            val vm: ArViewModel = koinViewModel()
+            val uiState = vm.uiState.collectAsState()
+            ArScreen(
+                vm = vm,
+                state = uiState.value,
+                onBackButtonClick = { navController.navigateUp() }
+            )
         }
         composable(route = VisitTobolskDestination.SETTINGS.name) {
             SettingsScreen(

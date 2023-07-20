@@ -1,5 +1,6 @@
 package ru.travel.visittobolsk.ui.uistates
 
+import io.github.sceneview.ar.node.ArNode
 import ru.travel.visittobolsk.data.models.ArModel
 
 sealed class ArUiState {
