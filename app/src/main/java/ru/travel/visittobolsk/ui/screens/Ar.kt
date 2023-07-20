@@ -105,12 +105,12 @@ fun ArScreen(
                 onCreate = { scene ->
                     sceneView = scene
                     scene.configureSession { session, config ->
-//                        config.apply {
+                        config.apply {
 //                            focusMode = Config.FocusMode.FIXED
 //                            instantPlacementMode = Config.InstantPlacementMode.DISABLED
 //                            planeFindingMode = Config.PlaneFindingMode.DISABLED
-//                            lightEstimationMode = Config.LightEstimationMode.DISABLED
-//                        }
+                            lightEstimationMode = Config.LightEstimationMode.ENVIRONMENTAL_HDR
+                        }
                     }
                 },
                 onSessionCreate = {
