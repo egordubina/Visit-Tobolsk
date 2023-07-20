@@ -113,9 +113,10 @@ fun ArScreen(
                     sceneView = scene
                     scene.configureSession { session, config ->
                         config.apply {
-//                            focusMode = Config.FocusMode.FIXED
-//                            instantPlacementMode = Config.InstantPlacementMode.DISABLED
-//                            planeFindingMode = Config.PlaneFindingMode.DISABLED
+                            focusMode = Config.FocusMode.AUTO
+                            instantPlacementMode = Config.InstantPlacementMode.LOCAL_Y_UP
+                            planeFindingMode = Config.PlaneFindingMode.HORIZONTAL
+                            depthMode = Config.DepthMode.AUTOMATIC
                             lightEstimationMode = Config.LightEstimationMode.ENVIRONMENTAL_HDR
                         }
                     }
@@ -137,7 +138,11 @@ fun ArScreen(
                     .padding(16.dp)
                     .align(Alignment.BottomCenter)
             ) {
-                Icon(imageVector = Icons.Rounded.PhotoCamera, contentDescription = null)
+                Icon(
+                    imageVector = Icons.Rounded.PhotoCamera,
+                    contentDescription = null,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
                 Text(text = "Сделать фото")
             }
         }
@@ -164,7 +169,7 @@ fun ArScreen(
                                 .loadModelGlbAsync(
                                     glbFileLocation = model.model,
                                     autoAnimate = true,
-                                    centerOrigin = Position(z = model.zPosition)
+                                    centerOrigin = Position(z = model.zPosition, y = 1f)
                                 ) as ArNode
                         )
                     } catch (e: Exception) {
