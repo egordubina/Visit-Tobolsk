@@ -9,7 +9,8 @@ class LoadArUseCase(private val api: SharedApi) {
             id = it.id,
             image = it.image,
             model = it.model,
-            name = it.name
+            name = it.name,
+            zPosition = it.zPosition
         )
     }
 }

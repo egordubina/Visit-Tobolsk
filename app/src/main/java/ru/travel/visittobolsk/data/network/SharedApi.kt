@@ -108,9 +108,9 @@ class SharedApiImpl : SharedApi {
     override suspend fun loadArModels(): List<ArModel> {
         return try {
             listOf(
-                ArModel(id = 0, "Купец", "models/kupes.glb", R.drawable.kupesrender),
-                ArModel(id = 1, "Лавка", "models/lavka.glb", R.drawable.lavkarender),
-                ArModel(id = 2, "Ладья", "models/ladia.glb", R.drawable.ladiarender),
+                ArModel(id = 0, "Купец", "models/kupes.glb", R.drawable.kupesrender, 7f),
+                ArModel(id = 1, "Лавка", "models/lavka.glb", R.drawable.lavkarender, 3f),
+                ArModel(id = 2, "Ладья", "models/ladia.glb", R.drawable.ladiarender, 2f),
             )
         } catch (e: Exception) {
             throw RuntimeException(e.toString())

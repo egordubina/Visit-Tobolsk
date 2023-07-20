@@ -4,6 +4,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,7 +17,9 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
+import androidx.compose.material.icons.rounded.PhotoCamera
 import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -43,13 +47,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.ar.core.Config
 import io.github.sceneview.ar.ARScene
 import io.github.sceneview.ar.ArSceneView
+import io.github.sceneview.ar.localRotation
 import io.github.sceneview.ar.node.ArNode
 import io.github.sceneview.math.Position
+import io.github.sceneview.math.Rotation
 import io.github.sceneview.math.Scale
 import kotlinx.coroutines.launch
 import ru.travel.visittobolsk.R
@@ -93,7 +100,7 @@ fun ArScreen(
             )
         }
     ) {
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
@@ -123,6 +130,16 @@ fun ArScreen(
 
                 }
             )
+            Button(
+                onClick = { /*TODO*/ },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .align(Alignment.BottomCenter)
+            ) {
+                Icon(imageVector = Icons.Rounded.PhotoCamera, contentDescription = null)
+                Text(text = "Сделать фото")
+            }
         }
         if (showSettings && state is ArUiState.Content && sceneView != null)
             Selector(
@@ -134,20 +151,20 @@ fun ArScreen(
                     }
                 },
                 models = state.arModels,
-                onModelClick = {
+                onModelClick = { model ->
                     if (sceneView != null && nodes.isNotEmpty()) {
                         nodes.clear()
-                        sceneView!!.children.forEach {
-                            sceneView!!.removeChild(it)
+                        sceneView!!.children.forEach { node ->
+                            sceneView!!.removeChild(node)
                         }
                     }
                     try {
                         nodes.add(
                             ArNode(engine = sceneView!!.engine)
                                 .loadModelGlbAsync(
-                                    glbFileLocation = it,
+                                    glbFileLocation = model.model,
                                     autoAnimate = true,
-                                    centerOrigin = Position(z = 3f)
+                                    centerOrigin = Position(z = model.zPosition)
                                 ) as ArNode
                         )
                     } catch (e: Exception) {
@@ -165,7 +182,7 @@ private fun Selector(
     state: SheetState,
     closeSelector: () -> Unit,
     models: List<ArModel>,
-    onModelClick: (link: String) -> Unit
+    onModelClick: (ArModel) -> Unit
 ) {
     Log.e("Models", models.toString())
     var imageHeight by remember { mutableStateOf(0.dp) }
@@ -187,7 +204,7 @@ private fun Selector(
             items(models) {
                 OutlinedCard(
                     onClick = {
-                        onModelClick(it.model)
+                        onModelClick(it)
                         closeSelector()
                     },
                     modifier = Modifier.onGloballyPositioned {

@@ -9,4 +9,5 @@ data class ArModel(
     val name: String,
     val model: String,
     @DrawableRes val image: Int,
+    val zPosition: Float
 )
