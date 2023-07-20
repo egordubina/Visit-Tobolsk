@@ -70,7 +70,6 @@ fun ArScreen(
     val scope = rememberCoroutineScope()
     val nodes = remember { mutableStateListOf<ArNode>() }
     var sceneView by remember { mutableStateOf<ArSceneView?>(null) }
-    var modelIsSelected by rememberSaveable { mutableStateOf(false) }
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -99,11 +98,6 @@ fun ArScreen(
                 .fillMaxSize()
                 .padding(it)
         ) {
-            AnimatedVisibility(visible = !modelIsSelected) {
-                Row {
-                    Text(text = "Выберите модель")
-                }
-            }
             ARScene(
                 modifier = Modifier.fillMaxSize(),
                 nodes = nodes,
@@ -153,11 +147,9 @@ fun ArScreen(
                                 .loadModelGlbAsync(
                                     glbFileLocation = it,
                                     autoAnimate = true,
-//                                    scaleToUnits = 0.7f,
-                                    centerOrigin = Position(y = -2f, z = 2f)
+                                    centerOrigin = Position(z = 3f)
                                 ) as ArNode
                         )
-                        modelIsSelected = true
                     } catch (e: Exception) {
                         Log.e("AR Exception", e.toString())
                         Toast.makeText(context, "Что-то пошло не так", Toast.LENGTH_LONG).show()
