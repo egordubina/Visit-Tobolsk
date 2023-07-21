@@ -2,11 +2,8 @@ package ru.travel.visittobolsk.ui.screens
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -47,17 +44,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.ar.core.Config
 import io.github.sceneview.ar.ARScene
 import io.github.sceneview.ar.ArSceneView
-import io.github.sceneview.ar.localRotation
 import io.github.sceneview.ar.node.ArNode
 import io.github.sceneview.math.Position
-import io.github.sceneview.math.Rotation
-import io.github.sceneview.math.Scale
 import kotlinx.coroutines.launch
 import ru.travel.visittobolsk.R
 import ru.travel.visittobolsk.data.models.ArModel
@@ -131,20 +124,20 @@ fun ArScreen(
 
                 }
             )
-            Button(
-                onClick = { /*TODO*/ },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .align(Alignment.BottomCenter)
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.PhotoCamera,
-                    contentDescription = null,
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-                Text(text = "Сделать фото")
-            }
+//            Button(
+//                onClick = {}, // todo: Take screenshot button
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(16.dp)
+//                    .align(Alignment.BottomCenter)
+//            ) {
+//                Icon(
+//                    imageVector = Icons.Rounded.PhotoCamera,
+//                    contentDescription = null,
+//                    modifier = Modifier.padding(end = 8.dp)
+//                )
+//                Text(text = "Сделать фото")
+//            }
         }
         if (showSettings && state is ArUiState.Content && sceneView != null)
             Selector(
